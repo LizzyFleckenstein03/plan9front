@@ -173,10 +173,39 @@ Cursor *corners[9] = {
 };
 
 void
+backgroundinit(void)
+{		
+	background = allocimage(display, screen->r, screen->chan, 1, 0x777777FF);
+	
+	if (wallpaper) {
+		Rectangle r = Rect(
+			(screen->r.min.x + screen->r.max.x - Dx(wallpaper->r)) / 2,
+			(screen->r.min.y + screen->r.max.y - Dy(wallpaper->r)) / 2,
+			(screen->r.min.x + screen->r.max.x + Dx(wallpaper->r)) / 2,
+			(screen->r.min.y + screen->r.max.y + Dy(wallpaper->r)) / 2
+		);
+
+		draw(background, r, wallpaper, nil, wallpaper->r.min);
+	}
+}
+
+void
+wallpaperinit(void)
+{
+	int fd;
+	
+	fd = open("/usr/glenda/lib/wallpaper", OREAD);
+	if(fd >= 0) {
+		wallpaper = readimage(display, fd, 0);
+		close(fd);
+	} else {
+		wallpaper = nil;
+	}
+}
+
+void
 iconinit(void)
 {
-	background = allocimage(display, Rect(0,0,1,1), screen->chan, 1, 0x777777FF);
-
 	/* greys are multiples of 0x11111100+0xFF, 14* being palest */
 	cols[BACK] = allocimage(display, Rect(0,0,1,1), CMAP8, 1, 0xFFFFFFFF^reverse);
 	cols[BORD] = allocimage(display, Rect(0,0,1,1), CMAP8, 1, 0x999999FF^reverse);

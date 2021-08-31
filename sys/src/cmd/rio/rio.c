@@ -186,6 +186,8 @@ threadmain(int argc, char *argv[])
 		exits("display open");
 	}
 	iconinit();
+	wallpaperinit();
+	backgroundinit();
 
 	exitchan = chancreate(sizeof(int), 0);
 	winclosechan = chancreate(sizeof(Window*), 0);
@@ -202,7 +204,7 @@ threadmain(int argc, char *argv[])
 	wscreen = allocscreen(screen, background, 0);
 	if(wscreen == nil)
 		error("can't allocate screen");
-	draw(view, viewr, background, nil, ZP);
+	draw(view, Rect(0, 0, viewr.max.x, viewr.max.y), background, nil, ZP);
 	flushimage(display, 1);
 
 	timerinit();
@@ -594,10 +596,12 @@ resized(void)
 	freescrtemps();
 	view = screen;
 	freescreen(wscreen);
+	freeimage(background);
+	backgroundinit();
 	wscreen = allocscreen(screen, background, 0);
 	if(wscreen == nil)
 		error("can't re-allocate screen");
-	draw(view, view->r, background, nil, ZP);
+	draw(view, Rect(0, 0, view->r.max.x, view->r.max.y), background, nil, ZP);
 	o = subpt(viewr.max, viewr.min);
 	n = subpt(view->clipr.max, view->clipr.min);
 	qsort(window, nwindow, sizeof(window[0]), wtopcmp);

@@ -17,6 +17,8 @@ void	error(char*);
 void	killprocs(void);
 int	shutdown(void*, char*);
 void	iconinit(void);
+void	wallpaperinit(void);
+void	backgroundinit(void);
 void	*erealloc(void*, uint);
 void *emalloc(uint);
 char *estrdup(char*);

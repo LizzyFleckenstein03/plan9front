@@ -296,6 +296,7 @@ Cursor	query;
 Cursor	*corners[9];
 
 Image	*background;
+Image	*wallpaper;
 Image	*cols[NCOL];
 Image	*titlecol;
 Image	*lighttitlecol;
