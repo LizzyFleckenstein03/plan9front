@@ -172,18 +172,23 @@ checkerrs(void)
 	int f, n, nl;
 	char *p;
 	long l;
+	long r;
+	
+	r = 0;		// total amount of characters read	
+	nl = 3; 	// maximum number of newlines
 
 	if(statfile(errfile, 0, 0, 0, &l, 0) > 0 && l != 0){
 		if((f=open((char *)errfile, 0)) != -1){
-			if((n=read(f, buf, sizeof buf-1)) > 0){
-				for(nl=0,p=buf; nl<3 && p<&buf[n]; p++)
+			while (r<l-1 && nl>0 && (n=read(f, buf, sizeof buf-1)) > 0) {
+				for(p=buf; nl>0 && p<&buf[n]; p++)
 					if(*p=='\n')
-						nl++;
+						nl--;
+				r += n;
 				*p = 0;
 				dprint("%s", buf);
-				if(p-buf < l-1)
-					dprint("(sam: more in %s)\n", errfile);
 			}
+			if (r<l-1)
+				dprint("(sam: more in %s)\n", errfile);
 			close(f);
 		}
 	}else
