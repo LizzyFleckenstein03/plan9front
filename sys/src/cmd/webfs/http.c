@@ -94,11 +94,11 @@ tlswrap(int fd, char *servername)
 static Hconn*
 hdial(Url *u, int cached)
 {
-	char addr[128];
+	char *addr;
 	Hconn *h, *p;
 	int fd, ctl;
 
-	snprint(addr, sizeof(addr), "tcp!%s!%s", u->host, u->port ? u->port : u->scheme);
+	addr = netmkaddr(u->host, "tcp", u->port ? u->port : u->scheme);
 
 	qlock(&hpool);
 	if(cached){
